@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hy.dao.IRoleDAO" >
+
+	<select id="findRoleAndPriByRoleid" parameterType="java.lang.Integer" resultMap="roleinfo" >
+		select roleid,role_cn,role_en,role_desc,role_status from role where roleid=#{roleid}
+	</select>
+	
+	<resultMap type="com.hy.pojo.Role" id="roleinfo">
+		<id property="roleid" column="roleid" />
+		<result property="roleCn" column="role_cn" />
+		<result property="roleEn" column="role_en" />
+		<result property="roleDesc" column="role_desc" />
+		<result property="roleStatus" column="role_status" />
+		<collection property="prilist" column="roleid" javaType="java.util.ArrayList" ofType="com.hy.pojo.Priviliage" select="com.hy.dao.IPriviliageDAO.findPriByRoleid"  ></collection>
+	</resultMap>
+	<select id="findAllRole" resultType="com.hy.pojo.Role">
+		select roleid,role_cn as roleCn,role_en as roleEn,role_desc as roleDesc,role_status as roleStatus from role
+		where roleid!=1
+	</select>
+	
+	<!-- 分页 -->
+	<select id="findRoleSplit" parameterType="java.util.Map" resultMap="roleinfo">
+		select roleid,role_cn as roleCn,role_en as roleEn,role_desc as roleDesc,role_status as roleStatus from role
+		limit #{start},#{ps}
+	</select>
+	
+	<!-- 统计总行数 -->
+	<select id="countRole" resultType="java.lang.Integer">
+		select count(roleid) from role
+	</select>
+
+
+</mapper>

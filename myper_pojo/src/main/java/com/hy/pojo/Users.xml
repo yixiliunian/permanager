@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hy.dao.IUserDAO" >
+	<select id="findUserByName" parameterType="java.lang.String" resultMap="userinfo">
+		select userid,loginname,loginpwd,realname,email,user_desc,user_status,deptno,roleid,picpath from users 
+		where loginname=#{loginname}
+	</select>
+
+
+	<select id="islogin" parameterType="com.hy.pojo.Users" resultMap="userinfo">
+		select userid,loginname,loginpwd,realname,email,user_desc,user_status,roleid,picpath from users 
+		where loginname=#{loginname} and loginpwd=#{loginpwd} and user_status='0'
+	</select>
+	
+	
+	<resultMap type="com.hy.pojo.Users" id="userinfo">
+		<id property="userid" column="userid" />
+		<result property="loginname" column="loginname" />
+		<result property="loginpwd" column="loginpwd" />
+		<result property="realname" column="realname" />
+		<result property="email" column="email" />
+		<result property="userDesc" column="user_desc" />
+		<result property="userStatus" column="user_status" />
+		<result property="picpath" column="picpath" />
+		<association property="dept" column="deptno" select="com.hy.dao.IDeptDAO.findDeptByDeptno"></association>
+		<association property="role" column="roleid" select="com.hy.dao.IRoleDAO.findRoleAndPriByRoleid"></association>
+	</resultMap>
+	
+<!-- 	分页查询所有用户信息 -->
+	<select id="findUserSplit" parameterType="java.util.Map" resultMap="userinfo">
+		select userid,loginname,loginpwd,realname,email,user_desc,user_status,deptno,roleid,picpath from users 
+		where userid!=1 limit #{start},#{ps}
+	</select>	
+	<!-- 统计总行数 -->
+	<select id="countUsers" resultType="java.lang.Integer">
+		select count(userid) from users where userid!=1
+	</select>
+	<!-- 添加用户 -->
+	<insert id="addUsers" parameterType="com.hy.pojo.Users" useGeneratedKeys="true" keyProperty="userid">
+		insert into Users(loginname,loginpwd,realname,email,user_desc,user_status,deptno,roleid,picpath) 
+		values(#{loginname},#{loginpwd},#{realname},#{email},#{userDesc},#{userStatus},#{dept.deptno},#{role.roleid},#{picpath})
+	</insert>
+	<!-- 删除用户即将用户状态变为离职 -->
+	<update id="deleteUsers" parameterType="java.lang.Integer">
+		update Users set user_status='2' where userid=#{userid}
+	</update>
+	<!-- 修改用户 -->
+	<update id="updateUsers" parameterType="com.hy.pojo.Users">
+		update Users 
+		<set>
+			<if test="loginpwd!=null">loginpwd=#{loginpwd},</if>
+			<if test="realname!=null">realname=#{realname},</if>
+			<if test="email!=null">email=#{email},</if>
+			<if test="userDesc!=null">user_desc=#{userDesc},</if>
+			<if test="userStatus!=null">user_status=#{userStatus},</if>
+			<if test="dept">deptno=#{dept.deptno},</if>
+			<if test="role">roleid=#{role.roleid},</if>
+			<if test="picpath">picpath=#{picpath}</if>
+		</set>
+		where userid=#{userid}
+	</update>
+	
+
+</mapper>

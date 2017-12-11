@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hy.dao.IPriviliageDAO" >
+
+	<!-- 根据roleid，查询角色对应的权限 -->
+	<select id="findPriByRoleid" parameterType="java.lang.Integer" resultType="com.hy.pojo.Priviliage" >
+		select p.priid as priid,p.pri_name as priName,p.pri_url as priUrl,p.pri_image as priImage ,p.parentid as parentid,p.pri_status as priStatus,p.pri_desc as priDesc 
+		from priviliage p,pri_role_relax x
+		where  p.priid=x.priid and x.roleid=#{roleid}
+	</select>
+	
+	<!-- 查询所有的权限信息 -->
+	<select id="findAllPri" resultType="com.hy.pojo.Priviliage">
+		select p.priid as priid,p.pri_name as priName,p.pri_url as priUrl,p.pri_image as priImage ,p.parentid as parentid,p.pri_status as priStatus,p.pri_desc as priDesc 
+		from priviliage p
+	</select>
+	
+	<!-- 查询所有url -->
+	<select id="findAllUrl" resultType="java.lang.String">
+		select pri_url as priUrl from priviliage where pri_url is not null
+	</select>
+	
+
+</mapper>

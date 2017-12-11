@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	
+	<!-- 引入实体映射文件 -->
+	<mappers>
+		<mapper resource="com/hy/pojo/Users.xml"/> 
+		<mapper resource="com/hy/pojo/Dept.xml"/> 
+		<mapper resource="com/hy/pojo/Role.xml"/> 
+		<mapper resource="com/hy/pojo/Priviliage.xml"/> 
+	</mappers>
+	
+</configuration>
